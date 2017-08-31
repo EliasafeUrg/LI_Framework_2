@@ -3,81 +3,149 @@
 
 	namespace app\core;
 	use \PDO;
+
 	class db{
 		
-		protected $db;
-		protected $query;
-		protected $stmt;
-		protected $table;
-		protected $banco;
+
+		// private $query;
+		// private $table;
+		// private $banco;
+		// private $attr;
 
 		function __construct(){
-	
-			$this->db = new PDO('mysql:host=localhost;dbname=loja', "root", "");
-			$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+			$this->attr = new \app\core\config\AtributesCreate;
+
+			
+		}
+
+	public function connectDB(){
+		 try {
+				 $banco =  new PDO('mysql:host=localhost;dbname=loja', "root", "");
+			     $banco->exec("set names utf8");
+                 $banco->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                 $banco->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+				 return $banco;
+			 } catch (\PDOException $e) {
+                    dump($e->getMessage());
+                              
+                    exit();
+          }
+
 
 		}
 
 		
+			// prepara query
+		private function prepareQuery($bindParameters =null){
+				$this->connect = $this->connectDB();
 
-		public function connectaDB(){
+				if(!is_null($bindParameters)):
+					
+					$stmt = $this->connect->prepare($this->query);
+					
+					if($this->execQuery($stmt,$bindParameters,$this->connect)):
+						return $this->connect;
+					endif;
+				else:
+					
+					$stmt = $this->connect->prepare($this->query);
 
+					if($this->execQuery($stmt)):
+						return $stmt;
+					endif;
+
+				endif;
+			
+		
 		}
 
-		public function get($table){
-			$this->banco = new db;
-			$this->banco->table = $table;
-			$this->banco->query = "SELECT * FROM {$this->banco->table}";
+			// EXECUTA QUERY 
+		private function execQuery($stmt, $bindParameters =null){
+			if(!is_null($bindParameters)):
+				
+
+
+				   try {
+                        $stmt->execute($bindParameters);
+						return true;
+                    } catch (\PDOException $e) {
+                        dump($e->getMessage());
+
+
+
+                    }
+			else:
+				if($stmt->execute()):
+					return true;
+				endif;
+			endif;
+		}
+
+		protected function get($table){
+				
+			// $this->banco = new db;
+			$this->table = $table;
+			$this->query = "SELECT * FROM {$this->table}";
 		
-			return $this->banco;
+			return $this;
 				
 		}
 
-		public function where($campo, $id){
+		protected function where($field, $id){
 			
-			$this->banco->query = "SELECT * FROM {$this->banco->table} WHERE {$campo} = {$id}";
-			// var_dump($this->banco->query);
-
+			$this->query = "SELECT * FROM {$this->table} WHERE {$field} = '{$id}' ";
 		}
 
+		protected function insert($table, $atributes){
+			
+				// Prepara campos and valores
+			$fields = $this->attr->createFields($atributes);
+			$values =  $this->attr->createValues($atributes);
+			$bindParameters = $this->attr->bindCreateParameters($atributes);
+
+			// $this->banco = new db;
+			$this->table = $table;
+			$this->query = "INSERT INTO {$this->table} ({$fields}) VALUES ($values)";
+			if($this->prepareQuery($bindParameters)):
+				return true;
+			else:
+				return false;	
+			endif;		
+		}
+
+				// Retorma o ultimo ID inserido
+		protected function insert_id(){
+				return $this->connect->lastInsertId();
+		}
+
+
+
+
 	
-		public function num_rows(){
-			$stmt = $this->prepareQuery($this->query);
+		protected function num_rows(){
+			$stmt = $this->prepareQuery();
 			return $stmt->rowCount();
 		}
 
 
-		public function result_array(){
+		protected function result(){
 			
-			$stmt = $this->prepareQuery($this->query);
-				
-			// return $stmt->fetch(PDO::FETCH_ASSOC);
-
-			 return $stmt->fetchAll(PDO::FETCH_ASSOC);
+			$stmt = $this->prepareQuery();	
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
 		}
 
-		public function result_obj(){
-			$stmt = $this->prepareQuery($this->query);
+		protected function row(){
 			
-			 return $stmt->fetchAll(PDO::FETCH_OBJ);
+			$stmt = $this->prepareQuery();
+			return $stmt->fetch(PDO::FETCH_ASSOC);
+			
 		}
 
-		public function prepareQuery(){
-
-				$stmt = $this->db->prepare($this->query);
-
-				if($this->execQuery($stmt)):
-					return $stmt;
-				endif;
+		protected function result_obj(){
+			$stmt = $this->prepareQuery();
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
 		}
-
-		public function execQuery($stmt){
-			if($stmt->execute()):
-				return "a";
-			endif;
-
-		}
-
 
 
 	}

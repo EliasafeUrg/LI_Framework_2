@@ -7,13 +7,40 @@
 
 
 		public function index(){
-		
-			$query = $this->db->get("cliente");
-			$this->db->where("ClienteId", 1);
 
-		
-				var_dump($query->result_obj());
+			// var_dump($this->connectDB());
 
+			// var_dump($this->db);
+			// $query = $this->db->get("cliente");
+			// $this->db->where("email", "li_kill@hotmail.com");
+
+
+			// if($query->num_rows() >= 1):
+			// 	echo "Email já registrado";
+			// else:
+		
+
+				$insert = [
+					"login" => "likill",
+					"email" => "li_kill3@hotmail.com",
+					"senha" =>  1234,
+					"PrimNome" => "Eliasafe",
+					"UltNome" =>	"Duarte",
+					"Endereco" => "",
+					"Cidade" => null,
+					"Cep" => null,
+					"Telefone" => null
+				];
+
+				$this->db->insert("cliente", $insert);
+				echo $this->db->insert_id();
+
+	
+			// endif;
+
+
+
+			
 
 		
 				
