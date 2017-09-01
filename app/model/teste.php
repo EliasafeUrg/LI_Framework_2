@@ -9,11 +9,11 @@
 
 		public function index(){
 
-			var_dump($this->connectDB());
 
-			var_dump($this->db);
+
+
 			$query = $this->db->get("cliente");
-			$this->db->where("email", "li_kill@hotmail.com");
+			$this->db->where("email", "li_kill3@hotmail.com");
 
 
 			if($query->num_rows() >= 1):
