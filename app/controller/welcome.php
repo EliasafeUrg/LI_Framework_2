@@ -10,15 +10,15 @@
 	{
 		
 		public function index(){
-			$retorno = $this->load->model("usuarios");
+			$model = $this->load->model("teste");
+			$model->teste->index();
 
-			$retorno->index();
+			// var_dump($retorno->teste->index());
+			// var_dump($retorno->usuarios);
+
+			// $retorno->index();
 		}
-
-		public function valida($id){
-
-
-		}
+		
 	}
 
 

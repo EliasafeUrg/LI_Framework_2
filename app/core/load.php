@@ -8,7 +8,6 @@
 
 	class load implements inter_load{
 
-		
 
 		public function view($view, $dados = []){
 			if(file_exists("app/views/{$view}.php")):
@@ -20,28 +19,23 @@
 			else:
 				echo "view não encotrada";
 			endif;
-
-
-
 		}
-		public function model($model){
-			
 
-			$this->nome_model = "a";
+		public function model($nome_model){
 
-			if(file_exists("app/model/{$model}.php")):
-				require "app/model/{$model}.php";
+			if(file_exists("app/model/{$nome_model}.php")):
+				require "app/model/{$nome_model}.php";
+				$nome_model = $nome_model;
+				$obj_model = new $nome_model;
+				$obj_model->$nome_model = new $obj_model;
+
+				return $obj_model;
+		
+
 				
-				return $model = new $model;
-
-				
-				else:
+			else:
 					echo "model não encontrada";
 			endif;
-		}
-
-		public function teste($id){
-			echo "oi";
 		}
 
 	}
