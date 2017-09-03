@@ -1,6 +1,6 @@
 {
     "name": "li/composer-php",
-    "description": "Composer portfilio",
+    "description": "Mini-Framework",
     "authors": [
         {
             "name": "Eliasafe Duarte de Pinho",
@@ -19,7 +19,7 @@
 
     "autoload": {
         "psr-4": {
-            "app\\": "app/"
+            "Core\\": "core"
         }
     }
 

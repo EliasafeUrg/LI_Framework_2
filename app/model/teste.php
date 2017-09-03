@@ -1,56 +1,25 @@
 <?php 
 
+use Core\LI_Model;
 
+class teste extends LI_Model{
 
-	use app\core\LI_Model;	
-	
-	class teste extends LI_Model{
-
-
-		public function index(){
-
-
-
-
-			$query = $this->db->get("cliente");
-			$this->db->where("email", "li_kill3@hotmail.com");
-
-
-			if($query->num_rows() >= 1):
-				echo "Email já registrado";
-			else:
+	public function index(){
 		
+		$update = [
+			"login" => "bb",
+			"email" => "cc"
+		];
+		$this->db->do_where("ClienteId", "1");
+		// $this->db->do_where("email", "1");
+		// $this->db->do_where("email", "Teste");
 
-				$insert = [
-					"login" => "likill",
-					"email" => "li_kill3@hotmail.com",
-					"senha" =>  1234,
-					"PrimNome" => "Eliasafe",
-					"UltNome" =>	"Duarte",
-					"Endereco" => "",
-					"Cidade" => null,
-					"Cep" => null,
-					"Telefone" => null
-				];
-
-				$this->db->insert("cliente", $insert);
-				echo $this->db->insert_id();
-
-	
-			endif;
-
-
-
-			
-
-		
-				
-
-
-
-		}
+		$this->db->update("cliente", $update);
 
 
 	}
 
- ?>
+
+}
+
+?>

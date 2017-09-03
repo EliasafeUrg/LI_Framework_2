@@ -5,9 +5,9 @@
 	<title>Welcome.php</title>
 </head>
 <body>
-	
 	WELCOME
 	<?php echo($name); ?>
 	<?php echo($age); ?>
 </body>
 </html>
+
