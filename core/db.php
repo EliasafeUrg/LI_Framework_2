@@ -11,6 +11,10 @@ class db{
 			// private $attr;
 	private $where = null;
 	private $query= null;
+	private $and = null;
+	private $sql_where = "WHERE";
+	private $field;
+	private $reference;
 
 
 	function __construct(){
@@ -37,15 +41,14 @@ class db{
 		$this->connect = $this->connectDB();
 		if(!is_null($bindParameters)):
 			$stmt = $this->connect->prepare($this->query);
-		if($this->execQuery($stmt,$bindParameters)):
-			return true;
-		endif;
+			if($this->execQuery($stmt,$bindParameters)):
+				return true;
+			endif;
 		else:
 			$stmt = $this->connect->prepare($this->query);
-
-		if($this->execQuery($stmt)):
-			return $stmt;
-		endif;
+			if($this->execQuery($stmt)):
+				return $stmt;
+			endif;
 
 		endif;	
 	}
@@ -64,18 +67,17 @@ class db{
 				if($stmt->execute()):
 					return true;
 				endif;
-				endif;
+			endif;
 			}
 			protected function update($table, $atributes){
-
 				$campo = $this->attrUpdate->createFieldsUpdate($atributes);
 				$fields =     $this->attrUpdate->createFieldsUpdate($atributes);
-
 				$update = $this->attrUpdate->bindCreateParameters($atributes);
 				
-				$this->query = "UPDATE {$table} SET $fields WHERE ";
+				$this->query = "UPDATE {$table} SET $fields";
 				$this->query .= $this->where;
-				$this->query = substr($this->query, 0, -3);
+
+				// $this->query = substr($this->query, 0, -4);
 				var_dump($this->query);
 				if($this->prepareQuery($update)):
 					return true;
@@ -84,25 +86,22 @@ class db{
 				endif;
 			}
 			protected function do_where($field, $id){
-				$this->where .= " $field = '$id' AND";
+				$this->where .= " $this->and $this->sql_where $field = '$id'";
+				$this->field = $field;
+				$this->sql_where = null;
+				$this->and =  "AND";
+
 			}
-
-
 			protected function get($table){
 				$this->table = $table;
-				$this->query = "SELECT * FROM {$this->table} WHERE";
+				$this->query = "SELECT * FROM {$this->table}";
 				$this->query .= $this->where;
-				$this->query = substr($this->query, 0, -3);
-				
-				return $this;
-				
+				var_dump($this->query);
+				return $this;			
 			}
-
 			protected function where($field, $id){
 				$this->query = "SELECT * FROM {$this->table} WHERE {$field} = '{$id}' ";
 			}
-
-			
 			protected function insert($table, $atributes){
 				// Prepara campos and valores
 				$fields = $this->attr->createFields($atributes);
@@ -117,7 +116,6 @@ class db{
 					return false;	
 				endif;		
 			}
-
 				// Retorma o ultimo ID inserido
 			protected function insert_id(){
 				return $this->connect->lastInsertId();
@@ -126,26 +124,17 @@ class db{
 				$stmt = $this->prepareQuery();
 				return $stmt->rowCount();
 			}
-
 			protected function result(){
-
 				$stmt = $this->prepareQuery();	
 				return $stmt->fetchAll(PDO::FETCH_ASSOC);
 			}
-
 			protected function row(){
-
 				$stmt = $this->prepareQuery();
 				return $stmt->fetch(PDO::FETCH_ASSOC);
 
 			}
-
 			protected function result_obj(){
 				$stmt = $this->prepareQuery();
 				return $stmt->fetchAll(PDO::FETCH_OBJ);
 			}
-
-			
-
-
 		}
