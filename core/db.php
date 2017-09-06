@@ -6,9 +6,7 @@ use Core\config\AtributesUpdate;
 use \PDO;
 
 class db{		
-			// private $query;
-			// private $table;
-			// private $attr;
+
 	private $where = null;
 	private $query= null;
 	private $and = null;
@@ -55,19 +53,25 @@ class db{
 
 			// EXECUTA QUERY 
 	private function execQuery($stmt, $bindParameters =null){
+		$this->where = "WHERE";
+		$this->query = null;
+		$this->and = null;
+		$this->field = null;
+	try {
 		if(!is_null($bindParameters)):
-			try {
+		
 				$stmt->execute($bindParameters);
-				return true;
-			} catch (\PDOException $e) {
-				dump($e->getMessage());
 
-			}
+				return true;
 			else:
 				if($stmt->execute()):
 					return true;
 				endif;
 			endif;
+	
+	} catch (\PDOException $e) {
+		dump($e->getMessage());
+	}
 			}
 			protected function update($table, $atributes){
 				$campo = $this->attrUpdate->createFieldsUpdate($atributes);
@@ -85,7 +89,37 @@ class db{
 					return false;
 				endif;
 			}
+
+
+			protected function insert($table, $atributes){
+				// Prepara campos and valores
+				$fields = $this->attrCreate->createFields($atributes);
+				$values =  $this->attrCreate->createValues($atributes);
+				$bindParameters = $this->attrCreate->bindCreateParameters($atributes);
+
+				$this->table = $table;
+				$this->query = "INSERT INTO {$this->table} ({$fields}) VALUES ($values)";
+				if($this->prepareQuery($bindParameters)):
+					return true;
+				else:
+					return false;	
+				endif;		
+			}
+
+			protected function delete($table){
+
+				$this->query = "DELETE FROM $table $this->sql_where";
+				$this->query .= $this->where;
+				var_dump($this->query);
+				if($this->prepareQuery()):
+					
+					return true;
+				else:
+					return false;	
+				endif;	
+			}
 			protected function do_where($field, $id){
+				
 				$this->where .= " $this->and $this->sql_where $field = '$id'";
 				$this->field = $field;
 				$this->sql_where = null;
@@ -102,20 +136,7 @@ class db{
 			protected function where($field, $id){
 				$this->query = "SELECT * FROM {$this->table} WHERE {$field} = '{$id}' ";
 			}
-			protected function insert($table, $atributes){
-				// Prepara campos and valores
-				$fields = $this->attr->createFields($atributes);
-				$values =  $this->attr->createValues($atributes);
-				$bindParameters = $this->attr->bindCreateParameters($atributes);
-
-				$this->table = $table;
-				$this->query = "INSERT INTO {$this->table} ({$fields}) VALUES ($values)";
-				if($this->prepareQuery($bindParameters)):
-					return true;
-				else:
-					return false;	
-				endif;		
-			}
+		
 				// Retorma o ultimo ID inserido
 			protected function insert_id(){
 				return $this->connect->lastInsertId();

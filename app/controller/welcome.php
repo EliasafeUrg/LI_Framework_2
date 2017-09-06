@@ -10,19 +10,22 @@
 	{
 		
 		public function index(){
-			$model = $this->load->model("teste");
-			$model->teste->index();
-			
+			function teste(){
 
+			}
 
-			// var_dump($retorno->teste->index());
-			// var_dump($retorno->usuarios);
+			$number = array(1,2,3,4,5,6);
 
-			// $retorno->index();
-		}
+			$filter_numbers = array_map( "teste", $number);	
+
 		
+			var_dump($filter_numbers);
+			// function filter_number($data){
+
+			// }
+		}
 	}
 
 
 
- ?>
+	?>

@@ -1,9 +1,5 @@
 <?php 
-
-
 	namespace Core;
-	
-
 
 	class load implements interfaces\inter_load{
 
