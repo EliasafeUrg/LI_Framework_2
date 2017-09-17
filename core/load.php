@@ -1,7 +1,13 @@
 <?php 
 	namespace Core;
 
-	class load implements interfaces\inter_load{
+	class load{
+
+
+		// function __construct($nome_model){
+		// 	require "app/model/{$nome_model}.php";
+		// 	$this->model = new $nome_model;
+		// }
 
 
 		public function view($view, $dados = []){
@@ -16,21 +22,16 @@
 			endif;
 		}
 
-		public function model($nome_model){
 
+		public function model($nome_model){
 			if(file_exists("app/model/{$nome_model}.php")):
 				require "app/model/{$nome_model}.php";
-				$nome_model = $nome_model;
-				$obj_model = new $nome_model;
-				$obj_model->$nome_model = new $obj_model;
-
-				return $obj_model;
-		
-
-				
+				$this->$nome_model = new $nome_model;
 			else:
-					echo "model não encontrada";
+				exit("Não foi encontrado nenhuma model com nome {$nome_model}");
 			endif;
+	
 		}
+
 
 	}

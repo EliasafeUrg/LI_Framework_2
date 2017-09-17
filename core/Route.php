@@ -6,18 +6,21 @@ namespace Core;
 class Route{
 
 	private $controller = "welcome";
-	private $method;
+	private $method = "index";
 	private $param = [];
 
 
 	public function __construct(){
 		$url = $this->getUrl();
 
+		
+
 		if(file_exists("app/controller/{$url[0]}.php")):
 			$this->controller = $url[0];
 		unset($url[0]);
 		else:
-			exit("App/Controller/ - path error 404 not found");
+			require "errors/not_found_model.php";
+			exit();
 
 		endif;
 
