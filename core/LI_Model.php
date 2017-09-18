@@ -3,7 +3,6 @@
 
 namespace Core;
 
-
 abstract class LI_Model{
 	protected $db;
 	function __construct(){
