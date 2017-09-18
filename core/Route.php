@@ -15,7 +15,7 @@ class Route{
 
 		
 
-		if(file_exists("app/controller/{$url[0]}.php")):
+		if(file_exists("app/controllers/{$url[0]}.php")):
 			$this->controller = $url[0];
 		unset($url[0]);
 		else:
@@ -25,7 +25,7 @@ class Route{
 
 		endif;
 
-		require "app/controller/{$this->controller}.php";
+		require "app/controllers/{$this->controller}.php";
 
 		$this->controller = new $this->controller;
 

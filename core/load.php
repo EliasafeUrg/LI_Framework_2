@@ -18,8 +18,8 @@
 
 
 		public function model($nome_model){
-			if(file_exists("app/model/{$nome_model}.php")):
-				require "app/model/{$nome_model}.php";
+			if(file_exists("app/models/{$nome_model}.php")):
+				require "app/models/{$nome_model}.php";
 				$this->$nome_model = new $nome_model;
 				
 			else:
