@@ -6,8 +6,15 @@ class teste extends LI_Model{
 
 	public function index(){
 	
-		$this->db->get("cliente");
-		$this->db->do_where("ClienteId",1);
+		
+		
+		$this->db->where("senha", 1234);
+		$this->db->or_where("ClienteId", 1);
+		$this->db->order_by("PrimNome", "ASC");
+		$query = $this->db->get("cliente");
+
+		var_dump($query->result());
+
 
 
 

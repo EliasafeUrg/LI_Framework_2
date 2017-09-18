@@ -10,8 +10,10 @@ class db{
 	private $where = null;
 	private $query= null;
 	private $and = null;
+	private $or = null;
 	private $sql_where = "WHERE";
 	private $field;
+	private $order_by = null;
 	private $reference;
 
 
@@ -118,26 +120,40 @@ class db{
 					return false;	
 				endif;	
 			}
-			protected function do_where($field, $id){
+			protected function where($field, $id){
 				
 				$this->where .= " $this->and $this->sql_where $field = '$id'";
 				$this->field = $field;
 				$this->sql_where = null;
 				$this->and =  "AND";
+				$this->or =  "OR";
+			}
 
+			protected function or_where($field, $id){
+				
+				$this->where .= " $this->or $this->sql_where $field = '$id'";
+				$this->field = $field;
+				$this->sql_where = null;
+				$this->or =  "OR";
+			}
+
+			protected function order_by($name, $option){
+				// var_dump($this->where);
+				$this->order_by = " ORDER BY {$name} {$option}";
+				
+				// order by CASE WHEN id = 100 THEN 1 ELSE 2 END, nome
 			}
 			protected function get($table){
+				
 				$this->table = $table;
 				$this->query = "SELECT * FROM {$this->table}";
-				$this->query .= $this->where;
+				
+				
+				$this->query .= $this->where." ". $this->order_by;
 				var_dump($this->query);
 				return $this;			
 			}
-			protected function where($field, $id){
-				$this->query = "SELECT * FROM {$this->table} WHERE {$field} = '{$id}' ";
-			}
-		
-				// Retorma o ultimo ID inserido
+						// Retorma o ultimo ID inserido
 			protected function insert_id(){
 				return $this->connect->lastInsertId();
 			}
