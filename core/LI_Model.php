@@ -8,6 +8,4 @@ abstract class LI_Model{
 	function __construct(){
 		$this->db = new db;
 	}
-
-
 }
