@@ -1,7 +1,7 @@
 <?php 
 
 	/**
-	* 
+	*  Class de Exemplo Controller
 	*/
 
 	use Core\LI_Controller;
@@ -10,8 +10,12 @@
 	{
 		
 		public function index(){
-			$this->load->model("teste");
-			$this->load->teste->index();
+			
+			$this->load->model("exemplo");
+			$dados["usuario"] = $this->load->exemplo->index();
+
+			$this->load->view("welcome", $dados);
+
 		}
 	}
 

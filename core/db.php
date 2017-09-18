@@ -1,6 +1,7 @@
 <?php 
 
 namespace Core;
+
 use Core\config\AtributesCreate;
 use Core\config\AtributesUpdate;
 use \PDO;
@@ -14,24 +15,31 @@ class db{
 	private $sql_where = "WHERE";
 	private $field;
 	private $order_by = null;
-	private $reference;
+	const INIFILE =  "app/config/database.ini";
+	
 
 
 	function __construct(){
+		
+		
 		$this->attrCreate = new AtributesCreate;
 		$this->attrUpdate = new AtributesUpdate;
 	}
 
 	public function connectDB(){
+		$this->iniData = parse_ini_file(self::INIFILE);
+
 		try {
-			$banco =  new PDO('mysql:host=localhost;dbname=loja', "root", "");
-			$banco->exec("set names utf8");
+
+			$banco =  @new PDO("{$this->iniData['driver']}:host={$this->iniData['host']}; dbname={$this->iniData['dbname']}", "{$this->iniData['username']}", "{$this->iniData['password']}" );
 			$banco->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$banco->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+			$banco->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES utf8');
 			return $banco;
 		} catch (\PDOException $e) {
-			dump($e->getMessage());
-			exit();
+
+			require "core/errors/database_error.php";
+			die();
 		}
 	}
 
@@ -55,27 +63,24 @@ class db{
 
 			// EXECUTA QUERY 
 	private function execQuery($stmt, $bindParameters =null){
-		$this->where = "WHERE";
-		$this->query = null;
-		$this->and = null;
-		$this->field = null;
+
 	try {
 		if(!is_null($bindParameters)):
 		
 				$stmt->execute($bindParameters);
-
 				return true;
 			else:
+
 				if($stmt->execute()):
 					return true;
 				endif;
 			endif;
 	
 	} catch (\PDOException $e) {
-		dump($e->getMessage());
+		require "core/errors/query_error.php";
 	}
 			}
-			protected function update($table, $atributes){
+			public function update($table, $atributes){
 				$campo = $this->attrUpdate->createFieldsUpdate($atributes);
 				$fields =     $this->attrUpdate->createFieldsUpdate($atributes);
 				$update = $this->attrUpdate->bindCreateParameters($atributes);
@@ -83,9 +88,8 @@ class db{
 				$this->query = "UPDATE {$table} SET $fields";
 				$this->query .= $this->where;
 
-				// $this->query = substr($this->query, 0, -4);
-				var_dump($this->query);
 				if($this->prepareQuery($update)):
+					$this->resetAtrubutes();
 					return true;
 				else:
 					return false;
@@ -93,7 +97,7 @@ class db{
 			}
 
 
-			protected function insert($table, $atributes){
+			public function insert($table, $atributes){
 				// Prepara campos and valores
 				$fields = $this->attrCreate->createFields($atributes);
 				$values =  $this->attrCreate->createValues($atributes);
@@ -108,20 +112,30 @@ class db{
 				endif;		
 			}
 
-			protected function delete($table){
-
+			public function delete($table){
+				// Deleta Registro
 				$this->query = "DELETE FROM $table $this->sql_where";
 				$this->query .= $this->where;
-				var_dump($this->query);
 				if($this->prepareQuery()):
 					
+					$this->resetAtrubutes();
 					return true;
 				else:
 					return false;	
 				endif;	
 			}
-			protected function where($field, $id){
-				
+			private function resetAtrubutes(){
+				 $this->where = null;
+				 $this->query= null;
+				 $this->and = null;
+				 $this->or = null;
+				 $this->sql_where = "WHERE";
+				 $this->field;
+				 $this->order_by = null;
+
+			}
+			public function where($field, $id){
+				// Seta Where
 				$this->where .= " $this->and $this->sql_where $field = '$id'";
 				$this->field = $field;
 				$this->sql_where = null;
@@ -129,48 +143,49 @@ class db{
 				$this->or =  "OR";
 			}
 
-			protected function or_where($field, $id){
-				
+			public function or_where($field, $id){
+				//  Seta OR
 				$this->where .= " $this->or $this->sql_where $field = '$id'";
 				$this->field = $field;
 				$this->sql_where = null;
 				$this->or =  "OR";
 			}
 
-			protected function order_by($name, $option){
-				// var_dump($this->where);
+			public function order_by($name, $option){
+				// Seta Order by
 				$this->order_by = " ORDER BY {$name} {$option}";
-				
-				// order by CASE WHEN id = 100 THEN 1 ELSE 2 END, nome
 			}
-			protected function get($table){
-				
+			public function get($table){
+				// Meodo responsável por executar Select
 				$this->table = $table;
 				$this->query = "SELECT * FROM {$this->table}";
-				
-				
 				$this->query .= $this->where." ". $this->order_by;
-				var_dump($this->query);
+				// var_dump($this);
 				return $this;			
 			}
-						// Retorma o ultimo ID inserido
-			protected function insert_id(){
+				
+			public function insert_id(){
+				// Retorma o ultimo ID inserido
 				return $this->connect->lastInsertId();
 			}
-			protected function num_rows(){
+			public function num_rows(){
+				// retorna numero de linhas encontrada;
 				$stmt = $this->prepareQuery();
 				return $stmt->rowCount();
 			}
-			protected function result(){
+			public function result(){
+				// retorna todas a linha encontradas em array
 				$stmt = $this->prepareQuery();	
 				return $stmt->fetchAll(PDO::FETCH_ASSOC);
 			}
-			protected function row(){
+			public function row(){
+				// retorna somente uma linha
 				$stmt = $this->prepareQuery();
 				return $stmt->fetch(PDO::FETCH_ASSOC);
 
 			}
-			protected function result_obj(){
+			public function result_obj(){
+				// retorna todas linha encontradas em objeto
 				$stmt = $this->prepareQuery();
 				return $stmt->fetchAll(PDO::FETCH_OBJ);
 			}

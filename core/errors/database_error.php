@@ -1,12 +1,12 @@
 
   <!DOCTYPE html>
-  <html lang="en">
+  <html lang="pt-br">
     <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-      <title>Error</title>
+      <title>Query Statament</title>
 
       <!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
@@ -32,10 +32,10 @@
             <div class="panel panel-default">
              <div class="panel-heading">
                 <div class="panel-body">
-                <h2><span class="text-danger">ERROR: 404 NOT FOUND.</span> </h2>
+                <h2><span class="text-danger">Error Database  </span> </h2>
               </div>
               <div class="panel-footer">
-                  <h1 class="text-center"><?php echo $error ?> Não encontrada<small> verifique se <?php echo $error ?> existe</small></h1> 
+                  <h2 class="text-center"><?php echo $e->getMessage(); ?></h2> 
               </div>
             </div>
              </div>
@@ -45,7 +45,5 @@
 
    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-      <!-- Include all compiled plugins (below), or include individual files as needed -->
-      <script src="js/bootstrap.min.js"></script>
     </body>
   </html>

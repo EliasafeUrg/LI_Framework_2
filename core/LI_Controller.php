@@ -4,7 +4,7 @@
 
 	namespace Core;
 
-	class LI_Controller{
+	abstract class LI_Controller{
 				
 		protected $load;
 		protected $sumulador;

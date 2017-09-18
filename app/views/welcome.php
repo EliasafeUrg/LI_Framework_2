@@ -6,8 +6,9 @@
 </head>
 <body>
 	WELCOME
-	<?php echo($name); ?>
-	<?php echo($age); ?>
+	<?php 
+		var_dump($usuario);
+	 ?>
 </body>
 </html>
 

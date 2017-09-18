@@ -4,7 +4,7 @@
 namespace Core;
 
 
-class LI_Model extends db{
+abstract class LI_Model{
 	protected $db;
 	function __construct(){
 		$this->db = new db;

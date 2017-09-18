@@ -19,6 +19,7 @@ class Route{
 			$this->controller = $url[0];
 		unset($url[0]);
 		else:
+			$error = "Controller";
 			require "errors/not_found_model.php";
 			exit();
 
@@ -33,12 +34,15 @@ class Route{
 				$this->method = $url[1];
 			unset($url[1]);
 			else:
+				
 				$url = $this->getUrl();
 
 				if((!$url[1])):
 					$this->method = "index";
 				else:
-					exit("Metodo não encontrado em Controller: ".$url[0]);
+					$error = "Metodo";
+					require "errors/not_found_model.php";
+					exit();
 				unset($url);
 
 				endif;	
