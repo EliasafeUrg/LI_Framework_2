@@ -11,7 +11,7 @@
 		
 		public function index(){
 			
-			// $this->load->model("exemplo");
+			$this->load->model("exemplo");
 			// $dados["usuario"] = $this->load->exemplo->index();
 
 			$this->load->view("welcome");

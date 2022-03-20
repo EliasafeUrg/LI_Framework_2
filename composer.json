@@ -2,15 +2,7 @@
     "name": "li/composer-php",
     "type": "project",
     "description": "Mini-Framework",
-    "authors": [
-        {
-            "name": "Eliasafe Duarte de Pinho",
-            "email": "li_okay@hotmail.com",
-            "description": "Mini-Framework - LI_Framework,
-            Lembre-se de installar o composer para rodar o projeto",
-            
-        }
-    ],
+
 
     "require": {
     	"php": ">=5.3.3",
