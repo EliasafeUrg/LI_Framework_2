@@ -13,17 +13,18 @@ class Route{
 	public function __construct(){
 		$url = $this->getUrl();
 
-		
-
-		if(file_exists("app/controllers/{$url[0]}.php")):
-			$this->controller = $url[0];
-		unset($url[0]);
-		else:
-			$error = "Controller";
-			require "errors/not_found_model.php";
-			exit();
-
+		if(!is_null($url)):
+			if(file_exists("app/controllers/{$url[0]}.php")):
+				$this->controller = $url[0];
+			unset($url[0]);
+			else:
+				$error = "Controller";
+				require "errors/not_found_model.php";
+				exit();
+	
+			endif;
 		endif;
+		
 
 		require "app/controllers/{$this->controller}.php";
 

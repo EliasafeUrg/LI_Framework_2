@@ -81,7 +81,7 @@ class db{
 	}
 			}
 			public function update($table, $atributes){
-				$campo = $this->attrUpdate->createFieldsUpdate($atributes);
+				
 				$fields =     $this->attrUpdate->createFieldsUpdate($atributes);
 				$update = $this->attrUpdate->bindCreateParameters($atributes);
 				
